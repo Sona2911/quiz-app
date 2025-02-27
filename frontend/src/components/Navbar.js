@@ -1,15 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './Home.css';
+import './Quiz.css';
 
 const Navbar = () => {
   return (
     <nav className="navbar">
-      <h1>Quiz Game</h1>
-      <div>
-        <Link to="/">Home</Link>
-        <Link to="/quiz">Start Quiz</Link>
-      </div>
+      <Link to="/">Home</Link>
+      <Link to="/quiz">Start Again</Link>
     </nav>
   );
 };

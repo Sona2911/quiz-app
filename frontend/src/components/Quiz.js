@@ -4,6 +4,7 @@ import './Quiz.css';
 
 const Quiz = () => {
   const [questions, setQuestions] = useState([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const [score, setScore] = useState(null);
 
@@ -17,6 +18,18 @@ const Quiz = () => {
     setAnswers({ ...answers, [question]: option });
   };
 
+  const handleNext = () => {
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    }
+  };
+
+  const handleBack = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+    }
+  };
+
   const handleSubmit = () => {
     let newScore = 0;
     questions.forEach(q => {
@@ -28,28 +41,35 @@ const Quiz = () => {
   const handleRestart = () => {
     setAnswers({});
     setScore(null);
+    setCurrentQuestionIndex(0);
   };
 
   return (
     <div className="quiz-container">
-      {questions.map((q, index) => (
-        <div className="question-card" key={index}>
-          <h3>{q.question}</h3>
-          {q.options.map(option => (
+      {score === null ? (
+        <div className="question-card">
+          <h3>{questions[currentQuestionIndex]?.question}</h3>
+          {questions[currentQuestionIndex]?.options.map(option => (
             <label key={option}>
               <input
                 type="radio"
-                name={q.question}
+                name={questions[currentQuestionIndex].question}
                 value={option}
-                onChange={() => handleChange(q.question, option)}
+                onChange={() => handleChange(questions[currentQuestionIndex].question, option)}
               />
               {option}
             </label>
           ))}
+          <div className="buttons-container">
+            <button onClick={handleBack} disabled={currentQuestionIndex === 0}>Back</button>
+            {currentQuestionIndex < questions.length - 1 ? (
+              <button onClick={handleNext}>Next</button>
+            ) : (
+              <button onClick={handleSubmit}>Submit Quiz</button>
+            )}
+          </div>
         </div>
-      ))}
-      <button onClick={handleSubmit}>Submit Quiz</button>
-      {score !== null && (
+      ) : (
         <div className="score-container">
           <h2>Your Score: {score}/{questions.length}</h2>
           <button onClick={handleRestart}>Start Again</button>

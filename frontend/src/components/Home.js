@@ -6,7 +6,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="home-container">
+    <div className="container">
       <h2>Welcome to the Quiz Game!</h2>
       <button onClick={() => navigate('/quiz')}>Start Quiz</button>
     </div>
