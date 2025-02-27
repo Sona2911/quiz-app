@@ -4,76 +4,80 @@ import './Quiz.css';
 
 const Quiz = () => {
   const [questions, setQuestions] = useState([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState({});
-  const [score, setScore] = useState(null);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [score, setScore] = useState(0);
+  const [showResult, setShowResult] = useState(false);
+
+  const API_URL = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/quiz')
-      .then(res => setQuestions(res.data))
-      .catch(err => console.error(err));
-  }, []);
-
-  const handleChange = (question, option) => {
-    setAnswers({ ...answers, [question]: option });
-  };
+    axios.get(`${API_URL}/quiz`)
+      .then((response) => {
+        setQuestions(response.data);
+      })
+      .catch((error) => {
+        console.error('Error fetching quiz data:', error);
+      });
+  }, [API_URL]);
 
   const handleNext = () => {
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    if (selectedAnswer === questions[currentQuestion]?.correctAnswer) {
+      setScore(score + 1);
+    }
+    setSelectedAnswer(null);
+    if (currentQuestion + 1 < questions.length) {
+      setCurrentQuestion(currentQuestion + 1);
+    } else {
+      setShowResult(true); // Show results after the last question
     }
   };
 
   const handleBack = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
+    if (currentQuestion > 0) {
+      setCurrentQuestion(currentQuestion - 1);
     }
   };
 
-  const handleSubmit = () => {
-    let newScore = 0;
-    questions.forEach(q => {
-      if (answers[q.question] === q.correctAnswer) newScore++;
-    });
-    setScore(newScore);
-  };
-
   const handleRestart = () => {
-    setAnswers({});
-    setScore(null);
-    setCurrentQuestionIndex(0);
+    setCurrentQuestion(0);
+    setScore(0);
+    setShowResult(false);
+    setSelectedAnswer(null);
   };
 
   return (
     <div className="quiz-container">
-      {score === null ? (
-        <div className="question-card">
-          <h3>{questions[currentQuestionIndex]?.question}</h3>
-          {questions[currentQuestionIndex]?.options.map(option => (
-            <label key={option}>
-              <input
-                type="radio"
-                name={questions[currentQuestionIndex].question}
-                value={option}
-                onChange={() => handleChange(questions[currentQuestionIndex].question, option)}
-              />
-              {option}
-            </label>
-          ))}
-          <div className="buttons-container">
-            <button onClick={handleBack} disabled={currentQuestionIndex === 0}>Back</button>
-            {currentQuestionIndex < questions.length - 1 ? (
-              <button onClick={handleNext}>Next</button>
-            ) : (
-              <button onClick={handleSubmit}>Submit Quiz</button>
-            )}
-          </div>
-        </div>
-      ) : (
-        <div className="score-container">
-          <h2>Your Score: {score}/{questions.length}</h2>
+      {showResult ? (
+        <div className="result-card">
+          <h2>Quiz Completed!</h2>
+          <p>Your Score: {score} / {questions.length}</p>
           <button onClick={handleRestart}>Start Again</button>
         </div>
+      ) : (
+        questions.length > 0 && (
+          <div className="question-card">
+            <h2>Question {currentQuestion + 1} / {questions.length}</h2>
+            <p>{questions[currentQuestion]?.question}</p>
+            <ul>
+              {questions[currentQuestion]?.options.map((option, index) => (
+                <li
+                  key={index}
+                  className={selectedAnswer === option ? 'selected' : ''}
+                  onClick={() => setSelectedAnswer(option)}
+                >
+                  {option}
+                </li>
+              ))}
+            </ul>
+            <div className="nav-buttons">
+              <button onClick={handleBack} disabled={currentQuestion === 0}>Back</button>
+              <button onClick={handleNext}>
+                {currentQuestion === questions.length - 1 ? 'Submit' : 'Next'}
+              </button>
+            </div>
+          </div>
+        )
       )}
     </div>
   );
