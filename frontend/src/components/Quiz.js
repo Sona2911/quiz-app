@@ -9,7 +9,7 @@ const Quiz = () => {
   const [score, setScore] = useState(0);
   const [showResult, setShowResult] = useState(false);
 
-  const API_URL = process.env.REACT_APP_API_URL;
+  const API_URL = 'https://quiz-app-eirv.onrender.com';
 
   useEffect(() => {
     axios.get(`${API_URL}/quiz`)
