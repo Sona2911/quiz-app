@@ -7,7 +7,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: ['https://quiz-app-eirv.onrender.com/', 'https://quiz-app-livid-nu-83.vercel.app/'] // Allow requests from both URLs
+  origin: ['https://quiz-app-eirv.onrender.com/', 'https://quiz-app-livid-nu-83.vercel.app/quiz'] // Allow requests from both URLs
 }));
 app.use(express.json());
 
