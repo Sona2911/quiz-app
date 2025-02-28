@@ -1,0 +1,22 @@
+services:
+  - name: quiz-app-backend
+    type: web
+    runtime: node
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: PORT
+        value: 5000
+
+  - name: quiz-app-frontend
+    type: web
+    runtime: node
+    buildCommand: cd frontend && npm install && npm run build
+    startCommand: cd frontend && npm install -g serve && serve -s build
+    envVars:
+      - key: REACT_APP_BACKEND_URL
+        sync: false
