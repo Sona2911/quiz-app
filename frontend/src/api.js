@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL =  'https://quiz-app-eirv.onrender.com';
+ export const API_URL =  'https://quiz-app-eirv.onrender.com';
 
 export const fetchQuestions = async () => {
   try {

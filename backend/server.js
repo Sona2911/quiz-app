@@ -6,9 +6,7 @@ require('dotenv').config();
 const app = express();
 
 // Middleware
-app.use(cors({
-  origin: ['https://quiz-app-eirv.onrender.com/', 'https://quiz-app-livid-nu-83.vercel.app/quiz'] // Allow requests from both URLs
-}));
+app.use(cors({ origin: '*' })); 
 app.use(express.json());
 
 // MongoDB Connection

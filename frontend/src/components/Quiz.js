@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Quiz.css';
-
+import { API_URL } from '../api';
 const Quiz = () => {
   const [questions, setQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -9,7 +9,7 @@ const Quiz = () => {
   const [score, setScore] = useState(0);
   const [showResult, setShowResult] = useState(false);
 
-  const API_URL = 'https://quiz-app-eirv.onrender.com';
+  
 
   useEffect(() => {
     axios.get(`${API_URL}/quiz`)
